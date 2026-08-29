@@ -3,17 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Project Hub</title>
+    <title>Developer Hub</title>
     <style>
         :root {
-            --bg-color: #0d1117;
-            --card-bg: #161b22;
-            --border-color: #30363d;
-            --text-primary: #c9d1d9;
-            --text-secondary: #8b949e;
-            --accent-color: #58a6ff;
-            --accent-hover: #79c0ff;
-            --tag-bg: #21262d;
+            --bg-main: #090d16;
+            --bg-card: rgba(22, 27, 34, 0.7);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --border-hover: #58a6ff;
+            --text-main: #f0f6fc;
+            --text-muted: #8b949e;
+            --accent-glow: rgba(88, 166, 255, 0.15);
+            --accent-blue: #58a6ff;
+            --accent-cyan: #39c5bb;
+            --accent-purple: #bc8cff;
         }
 
         * {
@@ -23,180 +25,369 @@
         }
 
         body {
-            background-color: var(--bg-color);
-            color: var(--text-primary);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            line-height: 1.6;
-            padding: 40px 20px;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Ambient Glow Background */
+        .bg-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: radial-gradient(var(--border-color) 1px, transparent 1px);
+            background-size: 30px 30px;
+            opacity: 0.3;
+            z-index: -2;
+        }
+
+        .glow-orb {
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+            top: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: -1;
+            pointer-events: none;
         }
 
         .container {
-            max-width: 900px;
+            max-width: 1100px;
             margin: 0 auto;
+            padding: 60px 20px;
+            width: 100%;
+            flex-grow: 1;
         }
 
         header {
-            margin-bottom: 40px;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 20px;
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(57, 197, 187, 0.1);
+            color: var(--accent-cyan);
+            border: 1px solid rgba(57, 197, 187, 0.3);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--accent-cyan);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--accent-cyan);
         }
 
         h1 {
-            font-size: 2.5rem;
-            color: var(--accent-color);
-            margin-bottom: 8px;
+            font-size: 3rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+            background: linear-gradient(135deg, #ffffff 30%, var(--accent-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 12px;
         }
 
         p.subtitle {
-            color: var(--text-secondary);
-            font-size: 1.1rem;
+            color: var(--text-muted);
+            font-size: 1.15rem;
+            max-width: 600px;
+            margin: 0 auto;
         }
 
-        .project-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 20px;
+        /* Controls Section */
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 40px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 12px 16px;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
         }
 
-        .project-card {
-            background-color: var(--card-bg);
+        .search-box {
+            background: rgba(0, 0, 0, 0.2);
             border: 1px solid var(--border-color);
             border-radius: 8px;
-            padding: 20px;
+            padding: 8px 14px;
+            color: var(--text-main);
+            font-size: 0.95rem;
+            width: 100%;
+            max-width: 300px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .search-box:focus {
+            border-color: var(--accent-blue);
+        }
+
+        .filter-tags {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+        }
+
+        .filter-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            color: var(--text-main);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .filter-btn.active {
+            color: var(--accent-blue);
+        }
+
+        /* Project Cards Grid */
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 24px;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 24px;
+            backdrop-filter: blur(10px);
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            transition: transform 0.2s ease, border-color 0.2s ease;
+            transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+            position: relative;
         }
 
-        .project-card:hover {
-            transform: translateY(-4px);
-            border-color: var(--accent-color);
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: var(--border-hover);
+            box-shadow: 0 10px 30px var(--accent-glow);
         }
 
-        .project-title {
-            font-size: 1.3rem;
-            color: #ffffff;
-            margin-bottom: 8px;
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
         }
 
-        .project-desc {
-            color: var(--text-secondary);
+        .card-title {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .icon-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 1.2rem;
+            transition: color 0.2s;
+        }
+
+        .card:hover .icon-link {
+            color: var(--accent-blue);
+        }
+
+        .card-desc {
+            color: var(--text-muted);
             font-size: 0.95rem;
-            margin-bottom: 16px;
+            line-height: 1.5;
+            margin-bottom: 20px;
             flex-grow: 1;
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .tags {
             display: flex;
-            flex-wrap: wrap;
             gap: 6px;
-            margin-bottom: 16px;
+            flex-wrap: wrap;
         }
 
         .tag {
-            background-color: var(--tag-bg);
-            color: var(--accent-color);
-            font-size: 0.75rem;
             font-family: monospace;
+            font-size: 0.75rem;
+            background: rgba(88, 166, 255, 0.1);
+            color: var(--accent-blue);
             padding: 3px 8px;
             border-radius: 4px;
-            border: 1px solid var(--border-color);
+            border: 1px solid rgba(88, 166, 255, 0.2);
         }
 
-        .project-link {
-            color: var(--accent-color);
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 0.9rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .project-link:hover {
-            color: var(--accent-hover);
-            text-decoration: underline;
+        /* Empty State */
+        .empty-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+            display: none;
         }
 
         footer {
-            margin-top: 60px;
             text-align: center;
-            color: var(--text-secondary);
-            font-size: 0.85rem;
+            padding: 30px;
             border-top: 1px solid var(--border-color);
-            padding-top: 20px;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 2.2rem; }
+            .controls { flex-direction: column; align-items: stretch; }
+            .search-box { max-width: 100%; }
         }
     </style>
 </head>
 <body>
 
+    <div class="bg-grid"></div>
+    <div class="glow-orb"></div>
+
     <div class="container">
         <header>
-            <h1>My Projects</h1>
-            <p class="subtitle">A collection of systems, experiments, and software builds.</p>
+            <div class="status-badge">
+                <span class="status-dot"></span> Active Systems Normal
+            </div>
+            <h1>Project Hub</h1>
+            <p class="subtitle">Custom software builds, systems code, and personal tools.</p>
         </header>
 
-        <main class="project-grid">
+        <div class="controls">
+            <input type="text" id="searchInput" class="search-box" placeholder="Search projects or tags..." onkeyup="filterProjects()">
+            <div class="filter-tags">
+                <button class="filter-btn active" onclick="setFilter('all', this)">All</button>
+                <button class="filter-btn" onclick="setFilter('system', this)">Systems</button>
+                <button class="filter-btn" onclick="setFilter('app', this)">Apps</button>
+                <button class="filter-btn" onclick="setFilter('tool', this)">Tools</button>
+            </div>
+        </div>
+
+        <main class="project-grid" id="projectGrid">
             
-            <article class="project-card">
-                <div>
-                    <h2 class="project-title">VeryBuggyOS</h2>
-                    <p class="project-desc">A custom 32-bit/64-bit operating system kernel developed in C and Assembly.</p>
+            <article class="card" data-category="system">
+                <div class="card-header">
+                    <h2 class="card-title">System Kernel</h2>
+                    <a href="#" class="icon-link" title="Open Project">↗</a>
+                </div>
+                <p class="card-desc">Custom low-level operating system kernel focusing on boot sequence logic and memory control.</p>
+                <div class="card-footer">
                     <div class="tags">
                         <span class="tag">C</span>
-                        <span class="tag">Assembly</span>
-                        <span class="tag">Kernel</span>
+                        <span class="tag">ASM</span>
                     </div>
                 </div>
-                <a href="https://github.com/gitasedola-crypto/VeryBuggyOs" class="project-link" target="_blank">View Repository &rarr;</a>
             </article>
 
-            <article class="project-card">
-                <div>
-                    <h2 class="project-title">EasyOS</h2>
-                    <p class="project-desc">Minimalist OS kernel built with C and utilizing the Limine v12.5.2 bootloader.</p>
-                    <div class="tags">
-                        <span class="tag">C</span>
-                        <span class="tag">Limine</span>
-                        <span class="tag">Arch Linux</span>
-                    </div>
+            <article class="card" data-category="app">
+                <div class="card-header">
+                    <h2 class="card-title">Disk Image Utility</h2>
+                    <a href="#" class="icon-link" title="Open Project">↗</a>
                 </div>
-                <a href="#" class="project-link">View Details &rarr;</a>
-            </article>
-
-            <article class="project-card">
-                <div>
-                    <h2 class="project-title">Android ISO Flasher</h2>
-                    <p class="project-desc">Mobile application interface built for writing bootable ISO disk images directly to USB storage over OTG.</p>
+                <p class="card-desc">Mobile interface for streaming raw ISO disk images directly to external USB flash drives.</p>
+                <div class="card-footer">
                     <div class="tags">
                         <span class="tag">Kotlin</span>
-                        <span class="tag">Jetpack Compose</span>
                         <span class="tag">Android</span>
                     </div>
                 </div>
-                <a href="#" class="project-link">View Project &rarr;</a>
             </article>
 
-            <article class="project-card">
-                <div>
-                    <h2 class="project-title">DirectX 11 Telemetry Overlay</h2>
-                    <p class="project-desc">Custom C++ graphics application creating an in-game performance telemetry overlay.</p>
+            <article class="card" data-category="tool">
+                <div class="card-header">
+                    <h2 class="card-title">Telemetry Overlay</h2>
+                    <a href="#" class="icon-link" title="Open Project">↗</a>
+                </div>
+                <p class="card-desc">In-game performance metrics and hardware telemetry overlay renderer.</p>
+                <div class="card-footer">
                     <div class="tags">
                         <span class="tag">C++</span>
-                        <span class="tag">DirectX 11</span>
-                        <span class="tag">Visual Studio</span>
+                        <span class="tag">DirectX</span>
                     </div>
                 </div>
-                <a href="#" class="project-link">View Project &rarr;</a>
             </article>
 
         </main>
 
-        <footer>
-            <p>&copy; 2026 | Built with HTML & CSS</p>
-        </footer>
+        <div class="empty-state" id="emptyState">
+            <p>No projects match your search criteria.</p>
+        </div>
     </div>
 
+    <footer>
+        <p>&copy; 2026 | Built with HTML, CSS & Vanilla JS</p>
+    </footer>
+
+    <script>
+        let currentFilter = 'all';
+
+        function setFilter(category, btn) {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentFilter = category;
+            filterProjects();
+        }
+
+        function filterProjects() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const cards = document.querySelectorAll('.card');
+            let visibleCount = 0;
+
+            cards.forEach(card => {
+                const title = card.querySelector('.card-title').innerText.toLowerCase();
+                const desc = card.querySelector('.card-desc').innerText.toLowerCase();
+                const tags = Array.from(card.querySelectorAll('.tag')).map(t => t.innerText.toLowerCase()).join(' ');
+                const category = card.getAttribute('data-category');
+
+                const matchesSearch = title.includes(query) || desc.includes(query) || tags.includes(query);
+                const matchesFilter = currentFilter === 'all' || category === currentFilter;
+
+                if (matchesSearch && matchesFilter) {
+                    card.style.display = 'flex';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            document.getElementById('emptyState').style.display = visibleCount === 0 ? 'block' : 'none';
+        }
+    </script>
 </body>
 </html>

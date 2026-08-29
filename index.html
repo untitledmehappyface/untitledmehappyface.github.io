@@ -1,1 +1,202 @@
-Test
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Hub</title>
+    <style>
+        :root {
+            --bg-color: #0d1117;
+            --card-bg: #161b22;
+            --border-color: #30363d;
+            --text-primary: #c9d1d9;
+            --text-secondary: #8b949e;
+            --accent-color: #58a6ff;
+            --accent-hover: #79c0ff;
+            --tag-bg: #21262d;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        header {
+            margin-bottom: 40px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: var(--accent-color);
+            margin-bottom: 8px;
+        }
+
+        p.subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .project-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+
+        .project-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent-color);
+        }
+
+        .project-title {
+            font-size: 1.3rem;
+            color: #ffffff;
+            margin-bottom: 8px;
+        }
+
+        .project-desc {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-bottom: 16px;
+            flex-grow: 1;
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 16px;
+        }
+
+        .tag {
+            background-color: var(--tag-bg);
+            color: var(--accent-color);
+            font-size: 0.75rem;
+            font-family: monospace;
+            padding: 3px 8px;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+        }
+
+        .project-link {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .project-link:hover {
+            color: var(--accent-hover);
+            text-decoration: underline;
+        }
+
+        footer {
+            margin-top: 60px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            border-top: 1px solid var(--border-color);
+            padding-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>My Projects</h1>
+            <p class="subtitle">A collection of systems, experiments, and software builds.</p>
+        </header>
+
+        <main class="project-grid">
+            
+            <article class="project-card">
+                <div>
+                    <h2 class="project-title">VeryBuggyOS</h2>
+                    <p class="project-desc">A custom 32-bit/64-bit operating system kernel developed in C and Assembly.</p>
+                    <div class="tags">
+                        <span class="tag">C</span>
+                        <span class="tag">Assembly</span>
+                        <span class="tag">Kernel</span>
+                    </div>
+                </div>
+                <a href="https://github.com/gitasedola-crypto/VeryBuggyOs" class="project-link" target="_blank">View Repository &rarr;</a>
+            </article>
+
+            <article class="project-card">
+                <div>
+                    <h2 class="project-title">EasyOS</h2>
+                    <p class="project-desc">Minimalist OS kernel built with C and utilizing the Limine v12.5.2 bootloader.</p>
+                    <div class="tags">
+                        <span class="tag">C</span>
+                        <span class="tag">Limine</span>
+                        <span class="tag">Arch Linux</span>
+                    </div>
+                </div>
+                <a href="#" class="project-link">View Details &rarr;</a>
+            </article>
+
+            <article class="project-card">
+                <div>
+                    <h2 class="project-title">Android ISO Flasher</h2>
+                    <p class="project-desc">Mobile application interface built for writing bootable ISO disk images directly to USB storage over OTG.</p>
+                    <div class="tags">
+                        <span class="tag">Kotlin</span>
+                        <span class="tag">Jetpack Compose</span>
+                        <span class="tag">Android</span>
+                    </div>
+                </div>
+                <a href="#" class="project-link">View Project &rarr;</a>
+            </article>
+
+            <article class="project-card">
+                <div>
+                    <h2 class="project-title">DirectX 11 Telemetry Overlay</h2>
+                    <p class="project-desc">Custom C++ graphics application creating an in-game performance telemetry overlay.</p>
+                    <div class="tags">
+                        <span class="tag">C++</span>
+                        <span class="tag">DirectX 11</span>
+                        <span class="tag">Visual Studio</span>
+                    </div>
+                </div>
+                <a href="#" class="project-link">View Project &rarr;</a>
+            </article>
+
+        </main>
+
+        <footer>
+            <p>&copy; 2026 | Built with HTML & CSS</p>
+        </footer>
+    </div>
+
+</body>
+</html>
